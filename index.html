@@ -1,0 +1,97 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\fs26 \cf0 <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>Fast Image Compressor & Resizer</title>\
+    <style>\
+        body \{ font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; display: flex; justify-content: center; \}\
+        .container \{ background: #fff; border-radius: 8px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 500px; width: 100%; text-align: center; \}\
+        h2 \{ margin-bottom: 20px; color: #333; \}\
+        input[type="file"] \{ margin: 15px 0; \}\
+        .controls \{ margin: 15px 0; \}\
+        label \{ font-size: 14px; font-weight: bold; \}\
+        input[type="range"] \{ width: 80%; \}\
+        button \{ background: #28a745; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 15px; \}\
+        button:hover \{ background: #218838; \}\
+        .output \{ margin-top: 20px; \}\
+        img \{ max-width: 100%; border-radius: 5px; margin-top: 10px; \}\
+    </style>\
+</head>\
+<body>\
+\
+<div class="container">\
+    <h2>Image Compressor</h2>\
+    <input type="file" id="upload" accept="image/*">\
+    \
+    <div class="controls">\
+        <label for="quality">Quality (<span id="quality-val">80</span>%):</label><br>\
+        <input type="range" id="quality" min="10" max="100" value="80">\
+    </div>\
+\
+    <button onclick="compressImage()">Compress Image</button>\
+\
+    <div class="output" id="output-section" style="display:none;">\
+        <h3>Compressed Preview:</h3>\
+        <img id="preview" alt="Compressed Preview">\
+        <br>\
+        <a id="download-btn" href="#" download="compressed_image.jpg">\
+            <button style="background:#007bff;">Download Image</button>\
+        </a>\
+    </div>\
+</div>\
+\
+<script>\
+    const qualityInput = document.getElementById('quality');\
+    const qualityVal = document.getElementById('quality-val');\
+    qualityInput.oninput = () => qualityVal.textContent = qualityInput.value;\
+\
+    function compressImage() \{\
+        const fileInput = document.getElementById('upload');\
+        if (!fileInput.files[0]) \{\
+            alert('Please select an image first!');\
+            return;\
+        \}\
+\
+        const file = fileInput.files[0];\
+        const reader = new FileReader();\
+\
+        reader.onload = function(event) \{\
+            const img = new Image();\
+            img.src = event.target.result;\
+\
+            img.onload = function() \{\
+                const canvas = document.createElement('canvas');\
+                const ctx = canvas.getContext('2d');\
+\
+                canvas.width = img.width;\
+                canvas.height = img.height;\
+\
+                ctx.drawImage(img, 0, 0, img.width, img.height);\
+\
+                const quality = qualityInput.value / 100;\
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);\
+\
+                document.getElementById('preview').src = compressedDataUrl;\
+                document.getElementById('download-btn').href = compressedDataUrl;\
+                document.getElementById('output-section').style.display = 'block';\
+            \};\
+        \};\
+\
+        reader.readAsDataURL(file);\
+    \}\
+</script>\
+\
+</body>\
+</html>\
+\pard\pardeftab560\sb160\sa160\partightenfactor0
+\cf0 \
+}
